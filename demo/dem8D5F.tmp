@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://dmcd05vsdt640"]
+
+[ext_resource type="Texture2D" uid="uid://buqwcm3w00sxt" path="res://icon.svg" id="1_sclkb"]
+[ext_resource type="Script" path="res://Player.gd" id="2_fypwj"]
+[ext_resource type="Script" path="res://StaticRand.gd" id="3_sc5od"]
+[ext_resource type="Script" path="res://Sprite2D.gd" id="4_qklqb"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="GDExample" type="GDExample" parent="."]
+amplitude = 234.0
+speed = 0.2
+position = Vector2(2.19319, 439.861)
+texture = ExtResource("1_sclkb")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(160, 57)
+script = ExtResource("2_fypwj")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+position = Vector2(197, 131)
+texture = ExtResource("1_sclkb")
+
+[node name="StaticRand" type="CharacterBody2D" parent="."]
+script = ExtResource("3_sc5od")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticRand"]
+script = ExtResource("4_qklqb")
