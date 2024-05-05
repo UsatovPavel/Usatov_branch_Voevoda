@@ -17,6 +17,7 @@ public:
 	TArray<TArray<TerrainType>> TerrainData;
 	TArray<Location> GeneralsInitPos;
 	TArray<Location> CastlesInitPos;
+	TerrainType get_terrain(Location loc) const;
 	void random_generate();
 	void generate_enemies();
 	void generate_castles();

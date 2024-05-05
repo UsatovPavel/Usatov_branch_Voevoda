@@ -17,4 +17,7 @@ public:
 	FVector UE_coordinates() {
 		return FVector(64.f * x+32, -64.f * y-32, 1.f);
 	}
+	int32 operator -(Location other) {
+		return x - other.x + y - other.y;
+	}
 };

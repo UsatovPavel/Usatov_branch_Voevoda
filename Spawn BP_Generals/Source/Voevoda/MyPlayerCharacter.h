@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "BaseStrategist.h"
 #include "MyPlayerCharacter.generated.h"
 
 UCLASS()
-class VOEVODA_API AMyPlayerCharacter : public ACharacter {
+class VOEVODA_API AMyPlayerCharacter : public ACharacter, public BaseStrategist {//cannot inherit from AActor
   GENERATED_BODY()
 
 public:

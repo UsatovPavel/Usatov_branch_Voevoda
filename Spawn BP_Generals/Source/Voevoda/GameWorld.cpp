@@ -3,7 +3,7 @@
 #include "EngineUtils.h"
 #include "GameFramework/Actor.h"
 #include "Templates/SharedPointer.h"
-
+#include "BattleResponseModel.h"
 
 AGameWorld::AGameWorld() {
 
@@ -13,6 +13,15 @@ AGameWorld::AGameWorld() {
 
 void AGameWorld::Tick(float DeltaTime) {
     Super::Tick(DeltaTime);
+    TOptional<Location> battle_location;
+    for (int i = 1; i<strategists.Num(); i++) {
+        if (strategists[i]->general.position - strategists[0]->general.position == 1) {
+            battle_location = strategists[i]->general.position;
+        }
+    }
+    if (battle_location.IsSet()) {
+        BattleResponseModel(strategists, battle_location.GetValue(), *map_ptr);
+    }
 }
 
 void AGameWorld::BeginPlay() {

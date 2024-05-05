@@ -69,3 +69,9 @@ void GameMap::generate_castles() {
         }
     }
 }
+TerrainType GameMap::get_terrain(Location loc) const {
+    if (loc.x < Width && loc.x >= 0 && loc.y >= 0 && loc.y < Height) {
+        return Empty;
+    }
+    return TerrainData[loc.x][loc.y];
+}
