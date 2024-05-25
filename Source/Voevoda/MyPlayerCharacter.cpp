@@ -25,10 +25,15 @@ AMyPlayerCharacter::AMyPlayerCharacter() {
 
 // Called when the game starts or when spawned
 void AMyPlayerCharacter::BeginPlay() { Super::BeginPlay(); //GetGameState<AMyGameState>()->CenterActor = this;
+general.army_size.Cavalry = 666;
 }
 
 // Called every frame
-void AMyPlayerCharacter::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
+void AMyPlayerCharacter::Tick(float DeltaTime) { 
+    Super::Tick(DeltaTime);
+    general.update_pos(this->GetActorLocation());
+}
+
 
 // Called to bind functionality to input
 void AMyPlayerCharacter::SetupPlayerInputComponent(

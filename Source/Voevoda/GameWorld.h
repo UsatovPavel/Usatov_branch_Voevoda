@@ -16,6 +16,7 @@
 #include "MapPainter.h"
 #include "Strategist.h"
 #include "Structure.h"
+#include "MyPlayerCharacter.h"
 #include "GameWorld.generated.h"
 
 UCLASS()
@@ -36,8 +37,9 @@ private:
     //TArray<TWeakObjectPtr<AActor>> strategists; Not work
     TArray<AStrategist*> strategists;
     TArray<AStructure*> structures;
-    //AMyPlayerCharacter* player_ptr = UGameplayStatics::GetPlayerCharacter();
+    AMyPlayerCharacter* player_ptr;
 public:
     UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = True))
         TSubclassOf<AActor> BP_Strategist;//BP_General - AStrategist с компонентой-полем.
+    TArray<AStrategist*> get_alive_strategists();
 };

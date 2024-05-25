@@ -40,7 +40,7 @@ void GameMap::random_generate()
     }
 }
 void GameMap::generate_enemies(){
-  float x=Width*Height/100;//one Army_position for 33^2 tiles
+  float x=Width*Height/300;//one Army_position for 33^2 tiles
   int32 enemies_count=x*FMath::RandRange(10, 15)/10;
   for (int32 enemy_ind=0; enemy_ind<enemies_count; enemy_ind++){
     while (true){
@@ -68,4 +68,10 @@ void GameMap::generate_castles() {
             }
         }
     }
+}
+TerrainType GameMap::get_terrain(Location loc) const {
+    if (loc.X < Width && loc.X >= 0 && loc.Y >= 0 && loc.Y < Height) {
+        return Empty;
+    }
+    return TerrainData[loc.X][loc.Y];
 }

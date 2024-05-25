@@ -10,28 +10,23 @@ UCLASS()
 class VOEVODA_API ADog : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ADog(const FObjectInitializer& ObjectInitializer);
 	virtual void Tick(float DeltaTime) override;
 	float GetHealth() const { return Health; }
+	void SetHealth(float val) { Health = val; }
 	float GetMaxHealth() const { return MaxHealth; }
-	void SetHealth(float val) { Health=val; }
-	void SetMaxHealth(float val) { MaxHealth=val; }
+	void SetMaxHealth(float val) { MaxHealth = val; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 	UPROPERTY(VisibleAnywhere)
-		class UWidgetComponent* ArmyWidgetComp;
-
+		class UWidgetComponent* HealthWidgetComp;
 	FVector MovementVelocity;
 	float Health;
-	float MaxHealth=120;
+	float MaxHealth = 120;
 	float HealthTweenDirection;
-
-public:	
-	// Called every frame
 
 };

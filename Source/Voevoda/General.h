@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Army.h"
 #include "Location.h"
+#include "Math/Vector.h"
 /**
  * 
  */
@@ -19,4 +20,5 @@ public:
 	double speed;
 	int kills;
 	void move(Location new_location);
+	void update_pos(FVector UE_coordinates);//verified
 };

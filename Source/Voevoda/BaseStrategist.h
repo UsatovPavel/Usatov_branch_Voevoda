@@ -11,7 +11,7 @@
 #include "Scout.h"
 #include "PlayerGameSessionStatistic.h"
 /**
- *
+ * 
  */
 class VOEVODA_API BaseStrategist
 {

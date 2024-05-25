@@ -10,17 +10,30 @@
 #include "General.h"
 #include "Scout.h"
 #include "PlayerGameSessionStatistic.h"
-#include "BaseStrategist.h"
 #include "Strategist.generated.h"
 
 UCLASS()
-class VOEVODA_API AStrategist : public AActor, public BaseStrategist
+class VOEVODA_API AStrategist : public AActor
 {
 	GENERATED_BODY()
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
 	TSubclassOf<AActor> ActorToSpawn;
-public:
+	//UPROPERTY(VisibleAnywhere)
+	//	class UWidgetComponent* ArmyWidgetComp;
+	bool dead;
+public:	
+	int32 id;
+	FString username;
+	TArray<int32> structures_controlled;
+	int32 manpower_available;
+	TArray<TArray<TerrainType>> visited_tiles;
+	General general;
+	TArray<Scout> scouts;
+	PlayerGameSessionStatistic session_stats;
+	bool is_dead() {
+		return dead;
+	}
 	AStrategist();
 	AStrategist(Location init_loc);
 protected:
@@ -30,5 +43,17 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	UFUNCTION(BlueprintCallable, Category="UFUNCTION")
+		int32 GetInfantry() {
+		return general.army_size.Infantry;}
+	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+		int32 GetArchers() {
+		return general.army_size.Archers;
+	}
+	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+		int32 GetCavalry() {
+		return general.army_size.Cavalry;
+	}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+		bool User_near = false;
 };

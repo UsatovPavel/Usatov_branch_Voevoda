@@ -4,7 +4,7 @@
 #include "Structure.h"
 
 // Sets default values
-AStructure::AStructure(Location init_pos): position(init_pos), capasity(FMath::RandRange(50, 100)), manpower_growth(FMath::RandRange(0, 5))
+AStructure::AStructure(Location init_pos): position(init_pos.X, init_pos.Y), capasity(FMath::RandRange(50, 100)), manpower_growth(FMath::RandRange(0, 5))
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
