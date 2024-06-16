@@ -20,10 +20,10 @@ public:
 	bool step_to_location(AStrategist* strateg_ptr, Location position, const GameMap* map_ptr, AMapPainter* painter_ptr,  bool attack = true);
 	void random_step(AStrategist* strateg_ptr, const GameMap* map_ptr, AMapPainter* painter_ptr);
 	AI_MoveModel(AStrategist* strateg_ptr, const TArray<AStructure*>& structures, AMyPlayerCharacter* player_ptr, GameMap* map_ptr, AGameWorld* game_world) {
-		if (strateg_ptr->User_near) { GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("see player"))); }
+		//if (strateg_ptr->User_near) { GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("see player"))); }
 		if (strateg_ptr->User_near) {
 			bool attack = !(battle_funcs.is_player_win(strateg_ptr, player_ptr->general.position, map_ptr, player_ptr, game_world));
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("attack %d"), attack));
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("attack %d"), attack));
 			if (step_to_location(strateg_ptr, player_ptr->get_location(), map_ptr, game_world->painter_ptr, attack)) {
 				return;
 			}

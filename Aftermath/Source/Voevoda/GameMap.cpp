@@ -243,7 +243,7 @@ void GameMap::generate_enemies() {
             }
         }
     }
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("From Map size %lld"), GeneralsInitPos.Num()));
+    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("From Map size %lld"), GeneralsInitPos.Num()));
 }
 void GameMap::generate_castles() {
     float x = Width * Height / 100;//one Castle for 33^2 tiles

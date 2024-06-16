@@ -57,8 +57,8 @@ void AGameWorld::Tick(float DeltaTime) {
 void AGameWorld::spawn_objects() {
     if (painter_ptr && player_ptr) {
 #ifdef SPAWN
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("begin spawning"));
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("size %lld"), map_ptr->GeneralsInitPos.Num()));
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("begin spawning"));
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("size %lld"), map_ptr->GeneralsInitPos.Num()));
         if (map_ptr->GeneralsInitPos.Num() == 0) { UE_LOG(LogTemp, Warning, TEXT("GameWorld get empty array")); return; }
         for (auto& general_pos : map_ptr->GeneralsInitPos) {
             //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("spawn general %f %f %f"), general_pos.UE_coordinates().X, general_pos.UE_coordinates().Y, general_pos.UE_coordinates().Z));
@@ -134,6 +134,6 @@ TOptional<AStrategist*> AGameWorld::spawn_strategist(FVector UE_coordinates) {
 }
 void AGameWorld::print_generals_pos() {
     for (auto strateg_ptr : strategists) {
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("position in GameWorld %d %d"), strateg_ptr->general.position.X, strateg_ptr->general.position.Y));
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("position in GameWorld %d %d"), strateg_ptr->general.position.X, strateg_ptr->general.position.Y));
     }
 }

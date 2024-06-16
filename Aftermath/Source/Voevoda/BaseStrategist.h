@@ -26,6 +26,7 @@ public:
 	General general;
 	TArray<Scout> scouts;
 	PlayerGameSessionStatistic session_stats;
+	Location last_location;
 	bool is_dead() {
 		return dead;
 	}

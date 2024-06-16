@@ -29,7 +29,7 @@ public:
 		if (TerrainData[old_loc.X][old_loc.Y] == Army_position) {
 			TerrainData[old_loc.X][old_loc.Y] = Grass;
 		}
-		if (TerrainData[old_loc.X][old_loc.Y]==Grass) {
+		if (TerrainData[new_loc.X][new_loc.Y]==Grass) {
 			TerrainData[new_loc.X][new_loc.Y] = Army_position;
 		}
 	}
