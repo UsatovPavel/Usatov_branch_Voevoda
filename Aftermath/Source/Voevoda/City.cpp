@@ -57,9 +57,6 @@ void  City::replenish_army(AStrategist* player_id, int32 amount) {
 void City::renewCityResourses() {
 
     manpower_growth = capasity;
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("renewCityResourses"));
-    FString message2 = FString::Printf(TEXT("manpower_growth: %d, capasity: %d"), manpower_growth, capasity);
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, message2);
 }
 
 void  City::SetPosition( Location pos, int32 id_) {

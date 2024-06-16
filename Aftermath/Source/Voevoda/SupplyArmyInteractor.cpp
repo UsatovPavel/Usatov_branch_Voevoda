@@ -71,7 +71,7 @@ void SupplyArmyInteractor::HandleIfTrueForPlayer(AStructure* structure) {
             return;
         }
 
-        city->replenish_army(PlayerCharacter, PlayerCharacter->manpower_available);
+        city->replenish_army(PlayerCharacter, replenishArmySize);
 
         PlayerCharacter->SupplyArmyWidget->AfterCityreplenish(structure->manpower_growth);
         LastSupplyTimeMap[Pair] = -1;

@@ -23,7 +23,7 @@ void Scout::TickFromStrategist(AMapPainter* painter_ptr)
 	}
 
 	if (is_player && active) {
-		painter_ptr->UpdateRhombVision(target_position.X, target_position.Y, 5, VisionType::Seen);
+		painter_ptr->UpdateRhombVisionForScout(target_position.X, target_position.Y, 5, target_position.X, target_position.Y);
 	}
 
 

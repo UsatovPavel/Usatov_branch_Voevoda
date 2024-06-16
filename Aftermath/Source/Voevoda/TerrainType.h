@@ -18,5 +18,4 @@ UENUM()
 enum VisionType {
     Seen UMETA(DisplayName = "Seen"),
     Unseen UMETA(DisplayName = "Unseen"),
-    Fog UMETA(DisplayName = "Fog"),
 };
