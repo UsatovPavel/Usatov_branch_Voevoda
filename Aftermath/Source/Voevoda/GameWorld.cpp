@@ -44,7 +44,7 @@ void AGameWorld::Tick(float DeltaTime) {
 #endif
 #ifdef MOVE
     if (GetWorld()->GetRealTimeSeconds() - time_last_move >= STEP_TIME) {
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Move Step %f"), time_last_move));
+        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Move Step %f"), time_last_move));
         time_last_move = GetWorld()->GetRealTimeSeconds();
         for (auto strateg_ptr : strategists) {
             AI_MoveModel(strateg_ptr, structures, player_ptr, map_ptr, this);

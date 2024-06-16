@@ -115,7 +115,8 @@ void AMyPlayerCharacter::SetDeselected()
 // Called every frame
 void AMyPlayerCharacter::Tick(float DeltaTime) { 
     Super::Tick(DeltaTime); 
-	general.update_pos(this->GetActorLocation());
+	painter_ptr->UpdateArmy(general.position, Location(GetActorLocation()));
+	general.update_pos(GetActorLocation());
 	if (CursorToWorld != nullptr)
 	{
 		if (APlayerController* PC = Cast<APlayerController>(GetController()))

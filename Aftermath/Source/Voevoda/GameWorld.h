@@ -33,10 +33,9 @@ public:
 
 public:
     virtual void BeginPlay() override;
-
+    AMapPainter* painter_ptr;
 private:
     GameMap* map_ptr;
-    AMapPainter* painter_ptr;
     UPROPERTY()
     TArray<AStructure*> structures;
     AMyPlayerCharacter* player_ptr;

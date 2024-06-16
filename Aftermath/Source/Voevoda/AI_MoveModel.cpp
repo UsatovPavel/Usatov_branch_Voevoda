@@ -13,30 +13,31 @@ TOptional<AStructure*> AI_MoveModel::get_nearest_structure(AStrategist* strateg_
 	}
 	return nearest_structure;
 }
-void AI_MoveModel::set_strateg_position(AStrategist* strateg_ptr, Location loc) {
+void AI_MoveModel::set_strateg_position(AStrategist* strateg_ptr, Location loc, AMapPainter* painter_ptr) {
+	painter_ptr->UpdateArmy(strateg_ptr->general.position, loc);
 	strateg_ptr->general.position = loc;
 	strateg_ptr->SetActorLocation(strateg_ptr->get_location().UE_coordinates());
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("step to %d %d"), loc.X, loc.Y));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("step to %d %d"), loc.X, loc.Y));
 }
-bool AI_MoveModel::step_to_location(AStrategist* strateg_ptr, Location position, const GameMap* map_ptr, bool attack) {//атакует - туда, нет - оттуда
+bool AI_MoveModel::step_to_location(AStrategist* strateg_ptr, Location position, const GameMap* map_ptr, AMapPainter* painter_ptr, bool attack) {//атакует - туда, нет - оттуда
 	MoveOrder dfs(strateg_ptr->general.position, map_ptr, 15);
 	TOptional<TArray<Location>> order = dfs.get_locations_order(position);
 	if (order.IsSet()) {
 		if (attack) {
-			set_strateg_position(strateg_ptr, order.GetValue()[0]);
+			set_strateg_position(strateg_ptr, order.GetValue()[0], painter_ptr);
 			return true;
 		}
 		Location tile_now = strateg_ptr->general.position;
 		FIntPoint delta = (tile_now - order.GetValue()[0]);
 		if (map_ptr->is_tile_valid({ tile_now.X + delta.X, tile_now.Y + delta.Y })) {
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("180 run")));
-			set_strateg_position(strateg_ptr, { tile_now.X + delta.X, tile_now.Y + delta.Y });
+			set_strateg_position(strateg_ptr, { tile_now.X + delta.X, tile_now.Y + delta.Y },painter_ptr);
 		}
 		else {
 			TArray<Location> walkable_adj = map_ptr->get_walkable_adj(tile_now);
 			for (int i = 0; i < walkable_adj.Num(); i++) {
 				if (walkable_adj[i] != order.GetValue()[0]) {
-					set_strateg_position(strateg_ptr, { walkable_adj[i] });
+					set_strateg_position(strateg_ptr, { walkable_adj[i] },painter_ptr);
 				}
 			}
 		}
@@ -45,11 +46,11 @@ bool AI_MoveModel::step_to_location(AStrategist* strateg_ptr, Location position,
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("DFS failed")));
 	return false;
 }
-void AI_MoveModel::random_step(AStrategist* strateg_ptr, const GameMap* map_ptr) {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("random step begin")));
+void AI_MoveModel::random_step(AStrategist* strateg_ptr, const GameMap* map_ptr, AMapPainter* painter_ptr) {
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("random step begin")));
 	TArray<Location> walkable_adj = map_ptr->get_walkable_adj(strateg_ptr->general.position);
 	int32 rand = FMath::RandRange(0, walkable_adj.Num() - 1);
-	set_strateg_position(strateg_ptr, walkable_adj[rand]);
+	set_strateg_position(strateg_ptr, walkable_adj[rand],  painter_ptr);
 }
 TArray<AStructure*> AI_MoveModel::get_wanted_structures(AStrategist* strateg_ptr, const TArray<AStructure*>& structures) {
 	TArray<AStructure*> wanted_structures;

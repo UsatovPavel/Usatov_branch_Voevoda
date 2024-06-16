@@ -44,10 +44,11 @@ private:
     UPaperTileSet* WaterTileSet;
     UPaperTileSet* MountainsTileSet;
     UPaperTileSet* WoodsTileSet;
-    UPaperTileSet* FogTileSet;
+
     UPaperTileSet* ArmyTileSet;
     UPaperTileSet* CastleTileSet;
 
+    UPaperTileSet* FogTileSet;
     UPaperTileSet* DarkCastleTileSet;
     UPaperTileSet* DarkGrassTileSet;
     UPaperTileSet* DarkWaterTileSet;
@@ -65,6 +66,12 @@ private:
     void ImportTileSets();
     void UpdateTileVision(int32 X, int32 Y, VisionType vision);
 public:
+    void UpdateArmy(Location old_loc, Location new_loc) {//переставляет тайлы исходя из GameMap
+        map.change_army_pos(old_loc, new_loc);
+        UpdateTileVision(new_loc.X, new_loc.Y, GetTileVision(new_loc.X, new_loc.Y));
+        UpdateTileVision(old_loc.X, old_loc.Y, GetTileVision(old_loc.X, old_loc.Y));
+    }
+    VisionType GetTileVision(int32 X, int32 Y);
     AMyPlayerCharacter* player_ptr;
     AGameWorld* GameWorld_ptr;
 };

@@ -124,7 +124,16 @@ void AMapPainter::UpdateRhombVision(
         }
     }
 }
-
+VisionType AMapPainter::GetTileVision(int32 X, int32 Y) {
+    X = abs((X) % map.Width);
+    Y = abs((Y) % map.Height);
+    UPaperTileSet* TileSet = TileMapComponent->GetTile(X, Y, 0).TileSet;
+    if (TileSet == GrassTileSet ||  TileSet == WaterTileSet || TileSet== MountainsTileSet || TileSet== WoodsTileSet 
+        || TileSet== ArmyTileSet || TileSet ==CastleTileSet) {
+        return  VisionType::Seen;
+    }
+    return VisionType::Unseen;
+}
 void AMapPainter::UpdateTileVision(int32 X, int32 Y, VisionType vision) {
     X = abs((X) % map.Width);
     Y = abs((Y) % map.Height);
