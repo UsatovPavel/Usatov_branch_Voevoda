@@ -29,6 +29,10 @@ Global
 		Shipping|Win32 = Shipping|Win32
 		Shipping|Win64 = Shipping|Win64
 	EndGlobalSection
+	# Visual Assist Section
+	GlobalSection(44630d46-96b5-488c-8df926e21db8c1a3) = preSolution
+		ueSolution=true
+	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5E3B726A-3D40-44CC-A649-B1C11C5AEF30}.DebugGame Editor|Win32.ActiveCfg = BuiltWithUnrealBuildTool|Win32
 		{5E3B726A-3D40-44CC-A649-B1C11C5AEF30}.DebugGame Editor|Win64.ActiveCfg = BuiltWithUnrealBuildTool|Win32
@@ -65,11 +69,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{5E3B726A-3D40-44CC-A649-B1C11C5AEF30} = {94A6C6F3-99B3-346E-9557-ABF9D4064DBD}
 		{6FAE1357-B615-4FD0-AD0D-F9C29D082A69} = {8E2F6A87-1826-34F4-940C-CC23A48F9FE4}
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9FD68A42-D525-4E24-9754-C15AB8260A77}
-	EndGlobalSection
-	GlobalSection(44630d46-96b5-488c-8df926e21db8c1a3) = preSolution
-		ueSolution = true
 	EndGlobalSection
 EndGlobal
