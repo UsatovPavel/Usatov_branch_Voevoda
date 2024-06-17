@@ -1,11 +1,12 @@
 #include "MapPainter.h"
+#include "GameWorld.h"
 #include "CoreMinimal.h"
 #include "EngineUtils.h"
 #include "GameFramework/Actor.h"
 #include "PaperTileMap.h"
 #include "PaperTileMapActor.h"
 #include "PaperTileMapComponent.h"
-
+#define SPAWN_CUBE//MyPlayerCharacter don't move without it
 void AMapPainter::ImportTileSets() {
     //Base terrain types:
     static ConstructorHelpers::FObjectFinder<UPaperTileSet> TileSetAssetGrass(
@@ -43,6 +44,11 @@ void AMapPainter::ImportTileSets() {
         TEXT("PaperTileSet'/Game/texture/castletileset'"));
     if (TileSetAssetCastle.Succeeded()) {
         CastleTileSet = TileSetAssetCastle.Object;
+    }
+    static ConstructorHelpers::FObjectFinder<UPaperTileSet> TileSetAssetScout(
+        TEXT("PaperTileSet'/Game/texture/scoutTileSet'"));
+    if (TileSetAssetScout.Succeeded()) {
+        ScoutTileSet = TileSetAssetScout.Object;
     }
 
 
@@ -84,18 +90,16 @@ AMapPainter::AMapPainter() {
 }
 
 void AMapPainter::Tick(float DeltaTime) {
-    FVector PlayerLocation = GetWorld()
-        ->GetFirstPlayerController()
-        ->GetPawn()
-        ->GetActorLocation(); // works only from Tick()
+    FVector PlayerLocation = player_ptr
+        ->GetActorLocation(); 
     int32 moveX = (static_cast<int>(PlayerLocation.X) - InitPlayerX);
     int32 moveY = (static_cast<int>(PlayerLocation.Y) - InitPlayerY);
     int32 defaultX = 0; // based on character init coordinates
     int32 defaultY = 0;
     int32 Tile_X = abs(
-        ((defaultX + moveX) / TileMapComponent->TileMap->TileWidth) % map.Width);
+        ((defaultX + moveX) / TileMapComponent->TileMap->TileWidth) % map.Width - 3);
     int32 Tile_Y =
-        abs(((defaultY - moveY) / TileMapComponent->TileMap->TileHeight) %
+        abs(((defaultY - moveY) / TileMapComponent->TileMap->TileHeight + 3) %
             map.Height); // very easy swap Height and Width
     UpdateRhombVision(Tile_X, Tile_Y, 7, VisionType::Unseen);
     UpdateRhombVision(Tile_X, Tile_Y, 5, VisionType::Seen);
@@ -125,8 +129,23 @@ void AMapPainter::UpdateRhombVision(
         }
     }
 }
-
+VisionType AMapPainter::GetTileVision(int32 X, int32 Y) {
+    X = abs((X) % map.Width);
+    Y = abs((Y) % map.Height);
+    UPaperTileSet* TileSet = TileMapComponent->GetTile(X, Y, 0).TileSet;
+    if (TileSet == FogTileSet) {
+        return VisionType::Fog;
+    }
+    if (TileSet == GrassTileSet ||  TileSet == WaterTileSet || TileSet== MountainsTileSet || TileSet== WoodsTileSet 
+        || TileSet== ArmyTileSet || TileSet ==CastleTileSet) {
+        return  VisionType::Seen;
+    }
+    return VisionType::Unseen;
+}
 void AMapPainter::UpdateTileVision(int32 X, int32 Y, VisionType vision) {
+    if (vision == VisionType::Fog) {
+        return;
+    }
     X = abs((X) % map.Width);
     Y = abs((Y) % map.Height);
     FPaperTileInfo TileInfo;
@@ -184,29 +203,129 @@ void AMapPainter::UpdateTileVision(int32 X, int32 Y, VisionType vision) {
     TileMapComponent->SetTile(X, Y, 0, TileInfo);
 }
 
+void AMapPainter::UpdateRhombVisionForScout(
+    int32 X, int32 Y,
+    int32 Radius, int32 ScoutX, int32 ScoutY) { // takes correct X, Y, UpdateTileVision() with uncorrect
+    for (int i = 0; i <= Radius; i++) {
+        for (int j = 0; j <= Radius - i; j++) {
+            UpdateTileVisionForScout(X + i, Y + j, ScoutX, ScoutY);
+        }
+    }
+    for (int i = 0; i >= -Radius; i--) {
+        for (int j = 0; j >= -i - Radius; j--) {
+            UpdateTileVisionForScout(X + i, Y + j, ScoutX, ScoutY);
+        }
+    }
+    for (int i = 0; i >= -Radius; i--) {
+        for (int j = 0; j <= Radius + i; j++) {
+            UpdateTileVisionForScout(X + i, Y + j, ScoutX, ScoutY);
+        }
+    }
+    for (int j = 0; j >= -Radius; j--) {
+        for (int i = 0; i <= Radius + j; i++) {
+            UpdateTileVisionForScout(X + i, Y + j, ScoutX, ScoutY);
+        }
+    }
+}
+
+void AMapPainter::UpdateTileVisionForScout(int32 X, int32 Y, int32 ScoutX, int32 ScoutY) {
+    X = abs((X) % map.Width);
+    Y = abs((Y) % map.Height);
+
+    if (X == ScoutX && Y == ScoutY) {
+        FPaperTileInfo TileInfo;
+        TileInfo.TileSet = ScoutTileSet;
+        TileInfo.PackedTileIndex = 0;
+        TileMapComponent->SetTile(X, Y, 0, TileInfo);
+        return;
+    }
+    FPaperTileInfo TileInfo;
+    switch (map.TerrainData[X][Y]) {
+    case Grass:
+        TileInfo.TileSet = GrassTileSet;
+        break;
+    case Woods:
+        TileInfo.TileSet = WoodsTileSet;
+        break;
+    case Mountains:
+        TileInfo.TileSet = MountainsTileSet;
+        break;
+    case Water:
+        TileInfo.TileSet = WaterTileSet;
+        break;
+    case Army_position:
+        TileInfo.TileSet = ArmyTileSet;
+        break;
+    case Castle:
+        TileInfo.TileSet = CastleTileSet;
+        break;
+    }
+    TileInfo.PackedTileIndex = 0;
+    TileMapComponent->SetTile(X, Y, 0, TileInfo);
+}
+
+
+void AddScoutOnMap(int32 X, int32 Y) {
+
+
+}
+
 void AMapPainter::BeginPlay() {
     Super::BeginPlay();
 
+    Grid2DArray.SetNumZeroed(map.Width);
+    for (int32 X = 0; X < map.Width; ++X) {
+        Grid2DArray[X].SetNumZeroed(map.Height);
+    }
+#ifdef SPAWN_CUBE
+    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawn CubeTile Width Height %lld %lld"), map.Width, map.Height));
+    for (int32 X = 0; X < map.Width; ++X) {
+        for (int32 Y = 0; Y < map.Height; ++Y) {
+            const float xPos = X * 64;
+            const float yPos = -Y * 64;
+            //spawn tiles
+            ACubeTileSetClass* NewTile;
+            TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
+            if (map.TerrainData[X][Y] != Mountains && map.TerrainData[X][Y] != Woods && map.TerrainData[X][Y] != Water) {
+                NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, -50.f), FRotator::ZeroRotator);
+            }
+            else {
+                NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, 20.f), FRotator::ZeroRotator);
+            }
+            
+            Grid2DArray[X][Y] = NewTile;
+        }
+    }
+#endif
     for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
         ++ActorItr) {
 
         TileMapComponent = ActorItr->GetRenderComponent();
     }
 
+}
+void AMapPainter::generate_TileMap() {//Call spawn_objects from GameWorld
+    for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
+        ++ActorItr) {
+
+        TileMapComponent = ActorItr->GetRenderComponent();
+    }
     if (TileMapComponent) {
-        generate_map();
+        generate_GameMap();
         TileMapComponent->ResizeMap(map.Width, map.Height);
+
         FVector PlayerLocation =
             GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
         InitPlayerX = static_cast<int>(PlayerLocation.X);
         InitPlayerY = static_cast<int>(PlayerLocation.Y);
         OneColorMap();
+        UE_LOG(LogTemp, Display, TEXT("generate_TileMap OK, now GameWorld spawn objects."));
+        GameWorld_ptr->spawn_objects();
     }
     else {
-        UE_LOG(LogTemp, Warning, TEXT("TileMapComponent is nullptr."));
+        UE_LOG(LogTemp, Warning, TEXT("generate_TileMap FAIL, TileMapComponent is nullptr"));
     }
 }
-
 void AMapPainter::OneColorMap() {
     for (int32 X = 0; X < map.Width; ++X) {
         for (int32 Y = 0; Y < map.Height; ++Y) {
@@ -214,11 +333,14 @@ void AMapPainter::OneColorMap() {
             TileInfo.TileSet = FogTileSet;
             TileInfo.PackedTileIndex = 0;
             TileMapComponent->SetTile(X, Y, 0, TileInfo);
+
         }
     }
 }
-void AMapPainter::generate_map() {
-    map.random_generate();
+void AMapPainter::generate_GameMap() {
+    //map.random_generate();
+    map.random_woods_and_mountains();
+    map.random_river();
     map.generate_enemies();
     map.generate_castles();
 }

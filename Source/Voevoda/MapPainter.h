@@ -12,9 +12,13 @@
 #include "PaperTileSet.h"
 #include "Location.h"
 #include "TerrainType.h"
+#include "CubeTileSetClass.h"
 #include "GameMap.h"
+#include "Strategist.h"
+#include "MyPlayerCharacter.h"
 #include "MapPainter.generated.h"
 
+class AGameWorld;
 UCLASS()
 class VOEVODA_API AMapPainter : public AActor {
     GENERATED_BODY()
@@ -27,9 +31,11 @@ public:
     virtual void BeginPlay() override;
 
 public:
-    void generate_map();
+    void generate_GameMap();
+    void generate_TileMap();
     void OneColorMap();
     void UpdateRhombVision(int32 X, int32 Y, int32 Radius, VisionType vision);
+    void UpdateRhombVisionForScout(int32 X, int32 Y, int32 Radius, int32 ScoutX, int32 ScoutY);
     GameMap map;
 private:
     // UPROPERTY(EditAnywhere, Category = "TileMap")
@@ -39,10 +45,12 @@ private:
     UPaperTileSet* WaterTileSet;
     UPaperTileSet* MountainsTileSet;
     UPaperTileSet* WoodsTileSet;
-    UPaperTileSet* FogTileSet;
+
     UPaperTileSet* ArmyTileSet;
     UPaperTileSet* CastleTileSet;
+    UPaperTileSet* ScoutTileSet;
 
+    UPaperTileSet* FogTileSet;
     UPaperTileSet* DarkCastleTileSet;
     UPaperTileSet* DarkGrassTileSet;
     UPaperTileSet* DarkWaterTileSet;
@@ -50,6 +58,23 @@ private:
     UPaperTileSet* DarkWoodsTileSet;
     int32 InitPlayerX;
     int32 InitPlayerY;
+
+    UPROPERTY(EditAnywhere, Category = "Grid|Setup")
+    TSubclassOf<ACubeTileSetClass> CubeTile;
+    UPROPERTY(EditAnywhere, Category = "Setup")
+        TSubclassOf<AStrategist> StrategistBP;
+
+    TArray<TArray<ACubeTileSetClass*>> Grid2DArray;
     void ImportTileSets();
+    void UpdateTileVisionForScout(int32 X, int32 Y, int32 ScoutX, int32 ScoutY);
     void UpdateTileVision(int32 X, int32 Y, VisionType vision);
+public:
+    void UpdateArmy(Location old_loc, Location new_loc) {//переставляет тайлы исходя из GameMap
+        map.change_army_pos(old_loc, new_loc);
+        UpdateTileVision(new_loc.X, new_loc.Y, GetTileVision(new_loc.X, new_loc.Y));
+        UpdateTileVision(old_loc.X, old_loc.Y, GetTileVision(old_loc.X, old_loc.Y));
+    }
+    VisionType GetTileVision(int32 X, int32 Y);
+    AMyPlayerCharacter* player_ptr;
+    AGameWorld* GameWorld_ptr;
 };

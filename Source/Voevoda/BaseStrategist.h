@@ -11,22 +11,26 @@
 #include "Scout.h"
 #include "PlayerGameSessionStatistic.h"
 /**
- * 
+ *
  */
 class VOEVODA_API BaseStrategist
 {
 	bool dead;
 public:
+	const int32 defaultScoutsNumder = 5;
 	int32 id;
 	FString username;
 	TArray<int32> structures_controlled;
-	int32 manpower_available;
+	int32 manpower_available = 50;
 	TArray<TArray<TerrainType>> visited_tiles;
 	General general;
 	TArray<Scout> scouts;
 	PlayerGameSessionStatistic session_stats;
 	bool is_dead() {
 		return dead;
+	}
+	Location get_location() {
+		return general.position;
 	}
 	BaseStrategist() {};
 	BaseStrategist(Location init_loc);

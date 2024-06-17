@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Math/IntVector.h"
 /**
- * 
+ *
  */
 class ArmyModifier {
 public:
@@ -39,13 +39,14 @@ public:
 	int32 Archers;
 	int32 Infantry;
 	int32 Cavalry;
-	Army():Archers(FMath::RandRange(0, 10)), Infantry(FMath::RandRange(0, 10)), Cavalry(FMath::RandRange(0, 10)){}
+	Army() :Archers(FMath::RandRange(0, 10)), Infantry(FMath::RandRange(0, 10)), Cavalry(FMath::RandRange(0, 10)) {}
 	void rand(int32 RandomSeed) {
 		FRandomStream SRand = FRandomStream();
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("from Army.rand() %lld"), RandomSeed));
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("from Army.rand() %lld"), RandomSeed));
 		SRand.Initialize(RandomSeed);
-		Archers = SRand.FRandRange(0, 10); Infantry = SRand.FRandRange(0, 10); Cavalry = SRand.FRandRange(0, 10); }
-	Army(int32 Arch, int32 Inf, int32 Cav):Archers(Arch), Infantry(Inf), Cavalry(Cav){}
+		Archers = SRand.FRandRange(0, 10); Infantry = SRand.FRandRange(0, 10); Cavalry = SRand.FRandRange(0, 10);
+	}
+	Army(int32 Arch, int32 Inf, int32 Cav) :Archers(Arch), Infantry(Inf), Cavalry(Cav) {}
 	Army operator +=(Army other) {
 		Archers += other.Archers;
 		Infantry += other.Infantry;
@@ -61,12 +62,12 @@ public:
 };
 class ArmyComposition {
 public:
-float Arch;
-float Inf;
-float Cav;
+	float Arch;
+	float Inf;
+	float Cav;
 	ArmyComposition(Army army) {
 		Arch = static_cast<float>(army.Archers) / (army.Archers + army.Cavalry + army.Infantry);
-		 Inf = static_cast<float>(army.Infantry) / (army.Archers + army.Cavalry + army.Infantry);
-		 Cav = static_cast<float>(army.Cavalry) / (army.Archers + army.Cavalry + army.Infantry);
+		Inf = static_cast<float>(army.Infantry) / (army.Archers + army.Cavalry + army.Infantry);
+		Cav = static_cast<float>(army.Cavalry) / (army.Archers + army.Cavalry + army.Infantry);
 	}
 };

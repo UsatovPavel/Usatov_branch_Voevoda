@@ -18,11 +18,11 @@ class VOEVODA_API AStrategist : public AActor
 	GENERATED_BODY()
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
-	TSubclassOf<AActor> ActorToSpawn;
+		TSubclassOf<AActor> ActorToSpawn;
 	//UPROPERTY(VisibleAnywhere)
 	//	class UWidgetComponent* ArmyWidgetComp;
 	bool dead;
-public:	
+public:
 	int32 id;
 	FString username;
 	TArray<int32> structures_controlled;
@@ -34,18 +34,22 @@ public:
 	bool is_dead() {
 		return dead;
 	}
+	Location get_location() {
+		return general.position;
+	}
 	AStrategist();
 	AStrategist(Location init_loc);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UFUNCTION(BlueprintCallable, Category="UFUNCTION")
+	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
 		int32 GetInfantry() {
-		return general.army_size.Infantry;}
+		return general.army_size.Infantry;
+	}
 	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
 		int32 GetArchers() {
 		return general.army_size.Archers;
@@ -56,4 +60,14 @@ public:
 	}
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
 		bool User_near = false;
+	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+		FVector GetLocation() {
+		return general.position.UE_coordinates();
+	}
+	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+		void PrintPosition() {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("position in BP %d %d"), general.position.X, general.position.Y));
+	}
+	//UPROPERTY(VisibleAnywhere)
+	//	class UWidgetComponent* ArmyWidgetComp;
 };
